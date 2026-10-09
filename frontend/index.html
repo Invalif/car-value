@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+
+    <title>Car Value — Оценка стоимости автомобиля</title>
+
+    <meta name="description"
+          content="Сервис расчёта ориентировочной стоимости автомобиля по году выпуска и пробегу.">
+
+    <link rel="stylesheet" href="/style.css">
+    <script src="/app.js" defer></script>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container header-content">
+        <a href="/" class="logo">
+            <span class="logo-icon">CV</span>
+            <span>CAR VALUE</span>
+        </a>
+
+        <span class="header-label">Сервис оценки автомобилей</span>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <div class="hero-content">
+            <p class="eyebrow">CAR VALUE · ВАРИАНТ №46</p>
+
+            <h1>Узнайте ориентировочную<br>
+                стоимость автомобиля</h1>
+
+            <p class="hero-description">
+                Рассчитайте стоимость автомобиля на основе года
+                выпуска и пробега. Просматривайте результаты
+                предыдущих оценок в единой истории.
+            </p>
+        </div>
+    </section>
+
+    <div class="main-grid">
+
+        <section class="card calculator-card">
+            <div class="section-heading">
+                <h2>Оценка автомобиля</h2>
+                <p>Укажите основные характеристики автомобиля.</p>
+            </div>
+
+            <form id="estimate-form">
+
+                <div class="form-group">
+                    <label for="year">Год выпуска</label>
+
+                    <input
+                        type="number"
+                        id="year"
+                        name="year"
+                        min="1980"
+                        required
+                        placeholder="Например, 2023"
+                        autocomplete="off"
+                    >
+
+                    <small>Год производства автомобиля</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="mileage">Пробег автомобиля</label>
+
+                    <div class="input-with-unit">
+                        <input
+                            type="number"
+                            id="mileage"
+                            name="mileage"
+                            min="0"
+                            max="1500000"
+                            step="1"
+                            required
+                            placeholder="Например, 45000"
+                            autocomplete="off"
+                        >
+
+                        <span class="input-unit">км</span>
+                    </div>
+
+                    <small>Фактический пробег на момент оценки</small>
+                </div>
+
+                <div class="form-actions">
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="calculate-btn"
+                    >
+                        Рассчитать стоимость
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="history-btn"
+                    >
+                        История оценок
+                    </button>
+                </div>
+
+                <div
+                    id="form-message"
+                    class="form-message"
+                    role="alert"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
+            </form>
+        </section>
+
+        <section
+            class="card result-card"
+            id="result-section"
+        >
+            <div class="section-heading">
+                <h2>Результат оценки</h2>
+                <p>Расчётная стоимость по модели Car Value.</p>
+            </div>
+
+            <div id="result-placeholder" class="result-placeholder">
+                <div class="placeholder-icon">₽</div>
+
+                <h3>Результат появится здесь</h3>
+
+                <p>
+                    Введите год выпуска и пробег автомобиля,
+                    затем нажмите «Рассчитать стоимость».
+                </p>
+            </div>
+
+            <div id="result-content" hidden>
+
+                <div class="price-block">
+                    <span class="price-label">
+                        Ориентировочная стоимость
+                    </span>
+
+                    <strong
+                        id="estimated-value"
+                        class="estimated-price"
+                    >—</strong>
+
+                    <span class="price-description">
+                        Расчёт по учебной оценочной модели
+                    </span>
+                </div>
+
+                <div class="price-range">
+                    <div>
+                        <span>Нижняя граница</span>
+                        <strong id="price-min">—</strong>
+                    </div>
+
+                    <div>
+                        <span>Верхняя граница</span>
+                        <strong id="price-max">—</strong>
+                    </div>
+                </div>
+
+                <div class="result-details">
+
+                    <div class="detail-row">
+                        <span>Возраст автомобиля</span>
+                        <strong id="vehicle-age">—</strong>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Среднегодовой пробег</span>
+                        <strong id="annual-mileage">—</strong>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Категория пробега</span>
+                        <strong id="mileage-category">—</strong>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Снижение стоимости</span>
+                        <strong id="depreciation">—</strong>
+                    </div>
+
+                </div>
+
+                <p class="result-note">
+                    Оценка носит информационный характер.
+                    Для определения реальной рыночной цены
+                    необходимо учитывать марку, модель,
+                    комплектацию и состояние автомобиля.
+                </p>
+
+            </div>
+        </section>
+
+    </div>
+
+    <section class="card history-card" id="history-section">
+
+        <div class="history-header">
+            <div class="section-heading">
+                <h2>История оценок</h2>
+                <p>
+                    Ранее выполненные расчёты,
+                    сохранённые в PostgreSQL.
+                </p>
+            </div>
+
+            <div class="history-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary btn-small"
+                    id="refresh-btn"
+                >
+                    Обновить
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-danger btn-small"
+                    id="clear-btn"
+                >
+                    Очистить историю
+                </button>
+
+            </div>
+        </div>
+
+        <div
+            class="history-message"
+            id="history-message"
+            aria-live="polite"
+        >
+            Нажмите «История оценок», чтобы загрузить записи.
+        </div>
+
+        <div
+            id="history-table-wrapper"
+            class="table-wrapper"
+            hidden
+        >
+
+            <table class="history-table">
+
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Дата оценки</th>
+                        <th>Год выпуска</th>
+                        <th>Пробег</th>
+                        <th>Стоимость</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+
+                <tbody id="history-body"></tbody>
+
+            </table>
+
+        </div>
+
+        <div class="pagination" id="pagination" hidden>
+
+            <button
+                type="button"
+                class="btn btn-secondary btn-small"
+                id="prev-btn"
+            >
+                Назад
+            </button>
+
+            <span id="page-info">Страница 1</span>
+
+            <button
+                type="button"
+                class="btn btn-secondary btn-small"
+                id="next-btn"
+            >
+                Далее
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-content">
+
+        <span>© 2026 Car Value</span>
+
+        <span>
+            Проектирование веб-сервисов ·
+            Лабораторная работа · Вариант №46
+        </span>
+
+    </div>
+</footer>
+
+</body>
+</html>
